@@ -1,0 +1,1007 @@
+const { useState, useEffect } = React;
+
+// ===== Icons =====
+const Icon = {
+  Play: ({ size = 18 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M8 5v14l11-7z"/>
+    </svg>
+  ),
+  ArrowRight: ({ size = 18 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+      <polyline points="12 5 19 12 12 19"/>
+    </svg>
+  ),
+  ChevronUp: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  ),
+  ChevronDown: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  ),
+  Eye: ({ size = 16 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  ),
+  Check: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  ),
+  Lightbulb: ({ size = 24 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 18h6"/>
+      <path d="M10 22h4"/>
+      <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/>
+    </svg>
+  ),
+  TrendingUp: ({ size = 24 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+      <polyline points="17 6 23 6 23 12"/>
+    </svg>
+  ),
+  Users: ({ size = 24 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  ),
+  Book: ({ size = 24 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+    </svg>
+  ),
+  Award: ({ size = 24 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="6"/>
+      <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+    </svg>
+  ),
+  Zap: ({ size = 24 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+  ),
+  Target: ({ size = 24 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="6"/>
+      <circle cx="12" cy="12" r="2"/>
+    </svg>
+  ),
+  Shield: ({ size = 24 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+  ),
+  Globe: ({ size = 16 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="2" y1="12" x2="22" y2="12"/>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+  ),
+  Mail: ({ size = 16 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+      <polyline points="22,6 12,13 2,6"/>
+    </svg>
+  ),
+  MessageCircle: ({ size = 16 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+    </svg>
+  ),
+};
+
+// ===== 品牌标语组件：仁峻步进・干得振邦 =====
+// "步进" 和 "振邦" 为红色，其余协调色
+function Slogan({ size = 'default' }) {
+  return (
+    <span style={{ display: 'inline' }}>
+      仁峻<span style={{ color: 'var(--brand-red-light)' }}>步进</span>
+      <span style={{ color: 'var(--text-tertiary)', fontWeight: 300, margin: '0 0.25em' }}>・</span>
+      干得<span style={{ color: 'var(--brand-red-light)' }}>振邦</span>
+    </span>
+  );
+}
+
+// ===== Nav =====
+function Nav({ onFollowClick }) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const handleNavClick = (e) => {
+    e.preventDefault();
+    const href = e.currentTarget.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      const el = document.querySelector(href);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handleCTA = (e) => {
+    e.preventDefault();
+    if (onFollowClick) onFollowClick();
+  };
+
+  return (
+    <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
+      <div className="container nav-inner">
+        <a href="#home" className="nav-brand" onClick={handleNavClick}>
+          <div className="nav-brand-logo">
+            <img src="assets/logo.png" alt="振邦团队Logo" />
+          </div>
+          <div className="nav-brand-text">
+            <span className="nav-brand-title">振邦团队</span>
+            <span className="nav-brand-sub">Good Team</span>
+          </div>
+        </a>
+        <div className="nav-links">
+          <a href="#home" className="nav-link" onClick={handleNavClick}>首页</a>
+          <a href="#about" className="nav-link" onClick={handleNavClick}>关于我们</a>
+          <a href="#team-dynamics" className="nav-link" onClick={handleNavClick}>团队动态</a>
+          <a href="#channels" className="nav-link" onClick={handleNavClick}>探索城市</a>
+        </div>
+        <button className="nav-cta" onClick={handleCTA}>
+          关注频道
+        </button>
+      </div>
+    </nav>
+  );
+}
+
+// ===== Hero =====
+function Hero() {
+  const handlePrimary = () => {
+    document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <section className="hero" id="home">
+      <div className="hero-bg">
+        <div className="hero-grid"></div>
+        <div className="hero-curve hero-curve-1"></div>
+        <div className="hero-curve hero-curve-2"></div>
+      </div>
+      <div className="container hero-inner">
+        <div className="hero-text">
+          <div className="hero-eyebrow">
+            <span className="hero-eyebrow-dot"></span>
+            振邦团队官方频道 · 正式上线
+          </div>
+          <h1 className="hero-title">
+            <span className="slogan-line">仁峻<span className="red">步进</span><span className="sep">・</span>干得<span className="red">振邦</span></span>
+          </h1>
+          <div className="hero-subtitle">· 振邦团队 Good Team</div>
+          <div className="hero-actions">
+            <button className="btn btn-primary" onClick={handlePrimary}>
+              查看详情
+              <Icon.ChevronDown size={18} />
+            </button>
+          </div>
+        </div>
+        <div className="hero-visual">
+          <div className="hero-logo-wrap">
+            <div className="hero-logo-ring"></div>
+            <div className="hero-logo-ring-2"></div>
+            <div className="hero-logo-main">
+              <img src="assets/logo.png" alt="振邦团队Logo" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===== About =====
+function About() {
+  const handleScrollNext = () => {
+    document.querySelector('#team-dynamics')?.scrollIntoView({ behavior: 'smooth' });
+  };
+  const handleMemberClick = (name) => {
+    alert(`查看 ${name} 的详细资料`);
+  };
+  const members = [
+    { name: 'Cael', role: '创始人 & 永谐市市长', desc: '负责振邦团队 & 振邦大陆 & 永谐市的主要运营工作', initial: 'C' },
+    { name: 'Yuan_Hun', role: '副团长 & 滨州市市长', desc: '负责滨州市的主要运营工作', initial: 'Y' },
+    { name: 'LiyiLeiting', role: '庭州市市长', desc: '负责庭州市的主要运营工作', initial: 'L' },
+    { name: 'H₂O', role: '瓷州市市长', desc: '负责瓷州市的主要运营工作', initial: 'H' },
+    { name: 'MeTng', role: '永谐南区长', desc: '负责永谐南的主要运营工作', initial: 'M' },
+    { name: 'Xingfanmingxian', role: '矿区所有者', desc: '掌握振邦大陆 · 矿区的所有资源', initial: 'X' },
+    { name: 'Small_Good', role: 'AI智能体', desc: '振邦大陆最先进的AI智能体', initial: 'S' },
+    { name: 'Gunmu', role: '滚木', desc: '滚木', initial: 'G' },
+  ];
+  const features = [
+    {
+      icon: <Icon.Target size={20} />,
+      title: '专注深耕',
+      desc: '聚焦核心领域，持续深耕打磨，输出有深度、有价值的内容与实践。',
+    },
+    {
+      icon: <Icon.Zap size={20} />,
+      title: '高效执行',
+      desc: '敏捷响应、快速迭代，用行动兑现承诺，用结果证明实力。',
+    },
+    {
+      icon: <Icon.Shield size={20} />,
+      title: '可靠可信',
+      desc: '坚持专业操守，坚守品质底线，做值得信赖的长期伙伴。',
+    },
+  ];
+
+  return (
+    <section className="section about" id="about">
+      <div className="container">
+        <div className="about-grid">
+          <div className="about-visual reveal">
+            <div className="about-card-main">
+              <img src="assets/logo.png" alt="振邦团队" />
+            </div>
+          </div>
+          <div className="about-content reveal">
+            <span className="section-tag">ABOUT US</span>
+            <h3>一支有情怀、有活力、有追求的团队</h3>
+            <p>
+              振邦团队 (Good Team) 是振邦大陆的主要管理组织。在这里，我们分享大陆风貌、地域故事、城市见闻与团队动态，秉持仁峻品格、振邦精神，与你一同探索振邦大陆的无限可能。
+            </p>
+          </div>
+        </div>
+
+        {/* 核心团队成员：关于我们的子部分 */}
+        <div className="about-team-sub">
+          <div className="section-header reveal">
+            <span className="section-tag">OUR TEAM</span>
+            <h2 className="section-title">核心团队成员</h2>
+            <p className="section-desc">
+              来自振邦团队的资深成员，共同打造有品质的内容
+            </p>
+          </div>
+          <div className="team-grid">
+            {members.map((m, i) => (
+              <div
+                className="team-card reveal"
+                key={i}
+                onClick={() => handleMemberClick(m.name)}
+                style={{ transitionDelay: `${i * 0.08}s` }}
+              >
+                <div className="team-avatar">{m.initial}</div>
+                <h4>{m.name}</h4>
+                <div className="team-role">{m.role}</div>
+                <p className="team-desc">{m.desc}</p>
+              </div>
+            ))}
+          </div>
+          <p className="team-note">（仅展示部分团队成员）</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===== Channels / Cities =====
+function Channels() {
+  const [toast, setToast] = React.useState('');
+  const showToast = (name) => {
+    setToast(`即将进入${name}`);
+    setTimeout(() => setToast(''), 1800);
+  };
+
+  // 永谐：绿色城市天际线 Logo
+  const YongxieLogo = () => (
+    <svg viewBox="0 0 120 120" className="city-logo">
+      <defs>
+        <linearGradient id="yx-g" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#4ade80"/>
+          <stop offset="100%" stopColor="#16a34a"/>
+        </linearGradient>
+      </defs>
+      {/* 底草地 */}
+      <rect x="0" y="95" width="120" height="25" fill="url(#yx-g)" opacity="0.85"/>
+      {/* 建筑群 */}
+      <rect x="10" y="60" width="18" height="40" fill="url(#yx-g)" opacity="0.7" rx="2"/>
+      <rect x="30" y="45" width="22" height="55" fill="url(#yx-g)" opacity="0.9" rx="2"/>
+      <rect x="55" y="30" width="20" height="70" fill="url(#yx-g)" rx="2"/>
+      <rect x="78" y="50" width="18" height="50" fill="url(#yx-g)" opacity="0.8" rx="2"/>
+      <rect x="98" y="65" width="16" height="35" fill="url(#yx-g)" opacity="0.6" rx="2"/>
+      {/* 窗户 */}
+      {[...Array(12)].map((_, i) => (
+        <rect key={i} x={58 + (i%2)*8} y={36 + Math.floor(i/2)*9} width="4" height="4" fill="#052e16" opacity="0.7" rx="1"/>
+      ))}
+      {/* 树 */}
+      <circle cx="8" cy="95" r="10" fill="#22c55e"/>
+      <circle cx="112" cy="95" r="12" fill="#16a34a"/>
+    </svg>
+  );
+
+  // 滨州：冰雪都市 Logo
+  const BinzhouLogo = () => (
+    <svg viewBox="0 0 120 120" className="city-logo">
+      <defs>
+        <linearGradient id="bz-g" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#e0f2fe"/>
+          <stop offset="100%" stopColor="#38bdf8"/>
+        </linearGradient>
+      </defs>
+      {/* 冰雪地面 */}
+      <path d="M0 100 Q30 95 60 100 Q90 105 120 100 L120 120 L0 120 Z" fill="url(#bz-g)" opacity="0.9"/>
+      {/* 冰雪建筑 尖顶 */}
+      <polygon points="25,55 15,80 35,80" fill="#e0f2fe" opacity="0.95"/>
+      <rect x="18" y="80" width="14" height="20" fill="#bae6fd" rx="2"/>
+      <polygon points="50,30 35,80 65,80" fill="url(#bz-g)" opacity="0.95"/>
+      <rect x="40" y="80" width="20" height="20" fill="#7dd3fc" rx="2"/>
+      <polygon points="85,50 75,80 95,80" fill="#e0f2fe" opacity="0.95"/>
+      <rect x="78" y="80" width="14" height="20" fill="#bae6fd" rx="2"/>
+      {/* 雪花 */}
+      <g stroke="#fff" strokeWidth="1.5" strokeLinecap="round" opacity="0.9">
+        <line x1="15" y1="20" x2="15" y2="28"/>
+        <line x1="11" y1="24" x2="19" y2="24"/>
+        <line x1="12" y1="21" x2="18" y2="27"/>
+        <line x1="18" y1="21" x2="12" y2="27"/>
+      </g>
+      <g stroke="#fff" strokeWidth="1" strokeLinecap="round" opacity="0.8">
+        <line x1="100" y1="30" x2="100" y2="38"/>
+        <line x1="96" y1="34" x2="104" y2="34"/>
+      </g>
+    </svg>
+  );
+
+  // 庭州：沙漠风情 Logo
+  const TingzhouLogo = () => (
+    <svg viewBox="0 0 120 120" className="city-logo">
+      <defs>
+        <linearGradient id="tz-g" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#fde68a"/>
+          <stop offset="100%" stopColor="#d97706"/>
+        </linearGradient>
+      </defs>
+      {/* 太阳 */}
+      <circle cx="95" cy="30" r="14" fill="#f59e0b" opacity="0.9"/>
+      {/* 沙丘背景 */}
+      <path d="M0 70 Q30 55 60 70 Q90 85 120 65 L120 120 L0 120 Z" fill="url(#tz-g)" opacity="0.6"/>
+      <path d="M0 85 Q40 75 70 90 Q95 100 120 85 L120 120 L0 120 Z" fill="url(#tz-g)" opacity="0.9"/>
+      {/* 骆驼剪影 */}
+      <g fill="#78350f" opacity="0.85">
+        <path d="M42 75 Q45 68 48 75 L50 75 Q52 62 56 75 L60 75 L62 90 L58 90 L57 80 L50 80 L49 90 L45 90 Z"/>
+        <rect x="44" y="90" width="2" height="6"/>
+        <rect x="56" y="90" width="2" height="6"/>
+      </g>
+      {/* 远处建筑剪影 */}
+      <rect x="80" y="65" width="6" height="15" fill="#92400e" opacity="0.7"/>
+      <polygon points="83,60 79,65 87,65" fill="#92400e" opacity="0.7"/>
+      <rect x="92" y="70" width="4" height="10" fill="#92400e" opacity="0.6"/>
+    </svg>
+  );
+
+  // 瓷州：热带+瓷器 Logo
+  const CizhouLogo = () => (
+    <svg viewBox="0 0 120 120" className="city-logo">
+      <defs>
+        <linearGradient id="cz-sky" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#bae6fd"/>
+          <stop offset="100%" stopColor="#22d3ee"/>
+        </linearGradient>
+      </defs>
+      {/* 背景 热带天空 */}
+      <rect x="0" y="0" width="120" height="120" fill="url(#cz-sky)" opacity="0.3" rx="8"/>
+      {/* 棕榈树 左 */}
+      <rect x="18" y="55" width="4" height="45" fill="#78350f"/>
+      <g fill="#16a34a">
+        <ellipse cx="12" cy="55" rx="12" ry="4" transform="rotate(-20 12 55)"/>
+        <ellipse cx="28" cy="55" rx="12" ry="4" transform="rotate(20 28 55)"/>
+        <ellipse cx="20" cy="50" rx="10" ry="3.5"/>
+      </g>
+      {/* 棕榈树 右 */}
+      <rect x="98" y="50" width="4" height="50" fill="#78350f"/>
+      <g fill="#15803d">
+        <ellipse cx="92" cy="50" rx="12" ry="4" transform="rotate(-20 92 50)"/>
+        <ellipse cx="108" cy="50" rx="12" ry="4" transform="rotate(20 108 50)"/>
+        <ellipse cx="100" cy="45" rx="10" ry="3.5"/>
+      </g>
+      {/* 瓷瓶 */}
+      <g>
+        <path d="M52 35 L68 35 L66 45 Q78 55 72 75 Q70 95 60 95 Q50 95 48 75 Q42 55 54 45 Z" fill="#f8fafc" stroke="#0ea5e9" strokeWidth="2"/>
+        <rect x="50" y="30" width="20" height="8" rx="2" fill="#f8fafc" stroke="#0ea5e9" strokeWidth="2"/>
+        {/* 青花花纹 */}
+        <g stroke="#0ea5e9" strokeWidth="1.5" fill="none" opacity="0.8">
+          <path d="M55 60 Q60 55 65 60 Q60 65 55 60"/>
+          <circle cx="60" cy="75" r="4"/>
+          <path d="M52 80 Q60 85 68 80"/>
+        </g>
+      </g>
+    </svg>
+  );
+
+  const cities = [
+    {
+      name: '永谐',
+      fullName: '永谐市',
+      desc: '位于振邦大陆中部，为振邦大陆的首都，融合多种建筑风格，是适合定居的绿色都市。',
+      Logo: YongxieLogo,
+      theme: 'yongxie',
+    },
+    {
+      name: '滨州',
+      fullName: '滨州市',
+      desc: '位于振邦大陆最北端，为被冰雪覆盖的繁华都市，但再冷的天气也不影响市民的生活热情。',
+      Logo: BinzhouLogo,
+      theme: 'binzhou',
+    },
+    {
+      name: '庭州',
+      fullName: '庭州市',
+      desc: '位于振邦大陆西南端，大部分地区被风沙覆盖，但淳朴的塔斯玛风情值得品味。',
+      Logo: TingzhouLogo,
+      theme: 'tingzhou',
+    },
+    {
+      name: '瓷州',
+      fullName: '瓷州市',
+      desc: '位于振邦大陆东端，以盛产瓷器为名的热带都市，是振邦大陆最大的瓷器出口地区。',
+      Logo: CizhouLogo,
+      theme: 'cizhou',
+    },
+  ];
+
+  // 生成指定数量的随机属性（用于特效粒子）
+  const makeParticles = (count, opts = {}) => {
+    return Array.from({ length: count }, (_, i) => {
+      const seed = (i * 9301 + 49297) % 233280;
+      const rand = seed / 233280;
+      return {
+        left: `${rand * 100}%`,
+        delay: `${(i / count) * (opts.duration || 6)}s`,
+        duration: `${(opts.baseDuration || 6) + rand * (opts.varyDuration || 4)}s`,
+        size: opts.minSize + rand * (opts.maxSize - opts.minSize),
+        ...opts.extra,
+      };
+    });
+  };
+
+  const renderFx = (theme) => {
+    if (theme === 'yongxie') {
+      const leaves = makeParticles(12, { baseDuration: 8, varyDuration: 4, minSize: 6, maxSize: 12 });
+      const butterflies = makeParticles(3, { baseDuration: 10, varyDuration: 6, minSize: 14, maxSize: 20 });
+      return (
+        <>
+          {leaves.map((p, i) => (
+            <span key={`l${i}`} className="fx-leaf" style={{
+              left: p.left,
+              animationDelay: p.delay,
+              animationDuration: p.duration,
+              width: `${p.size}px`,
+              height: `${p.size * 0.6}px`,
+            }}/>
+          ))}
+          {butterflies.map((p, i) => (
+            <span key={`b${i}`} className="fx-butterfly" style={{
+              left: `${20 + i * 25}%`,
+              animationDelay: `${i * 1.5}s`,
+              animationDuration: p.duration,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+            }}/>
+          ))}
+          <div className="fx-grass">
+            {[...Array(14)].map((_, i) => (
+              <span key={i} style={{ left: `${i * 7.5}%`, animationDelay: `${i * 0.1}s` }}/>
+            ))}
+          </div>
+        </>
+      );
+    }
+    if (theme === 'binzhou') {
+      const flakes = makeParticles(30, { baseDuration: 5, varyDuration: 4, minSize: 2, maxSize: 6 });
+      return (
+        <>
+          {flakes.map((p, i) => (
+            <span key={i} className="fx-snow" style={{
+              left: p.left,
+              animationDelay: p.delay,
+              animationDuration: p.duration,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              opacity: 0.5 + (p.size / 6) * 0.5,
+            }}/>
+          ))}
+        </>
+      );
+    }
+    if (theme === 'tingzhou') {
+      const sand = makeParticles(25, { baseDuration: 4, varyDuration: 3, minSize: 2, maxSize: 5 });
+      return (
+        <>
+          {sand.map((p, i) => (
+            <span key={i} className="fx-sand" style={{
+              top: `${(i % 8) * 12 + 10}%`,
+              animationDelay: `${(i / 25) * 4}s`,
+              animationDuration: p.duration,
+              width: `${p.size * 2}px`,
+              height: `${p.size * 0.5}px`,
+              opacity: 0.3 + (i % 5) * 0.12,
+            }}/>
+          ))}
+          <div className="fx-sand-haze"/>
+        </>
+      );
+    }
+    if (theme === 'cizhou') {
+      const drops = makeParticles(28, { baseDuration: 0.8, varyDuration: 0.6, minSize: 1, maxSize: 2 });
+      return (
+        <>
+          {drops.map((p, i) => (
+            <span key={i} className="fx-rain" style={{
+              left: p.left,
+              animationDelay: p.delay,
+              animationDuration: p.duration,
+              height: `${12 + (i % 5) * 4}px`,
+              opacity: 0.4 + (i % 3) * 0.2,
+            }}/>
+          ))}
+          <div className="fx-ripple">
+            {[...Array(6)].map((_, i) => (
+              <span key={i} style={{ left: `${10 + i * 15}%`, animationDelay: `${i * 0.8}s` }}/>
+            ))}
+          </div>
+        </>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <section className="section cities" id="channels">
+      <div className="container">
+        <div className="section-header reveal">
+          <span className="section-tag">EXPLORE CITIES</span>
+          <h2 className="section-title">探索城市</h2>
+          <p className="section-desc">
+            来自振邦大陆的四大城市，环境、人文、风景各有不同
+          </p>
+        </div>
+        <div className="cities-grid">
+          {cities.map((c, i) => (
+            <div
+              className={`city-card city-${c.theme} reveal`}
+              key={i}
+              style={{ transitionDelay: `${i * 0.08}s` }}
+            >
+              <div className="city-fx">{renderFx(c.theme)}</div>
+              <div className="city-logo-wrap">
+                <c.Logo />
+              </div>
+              <div className="city-content">
+                <h3>{c.name}</h3>
+                <p>{c.desc}</p>
+                <button className="city-enter-btn" onClick={() => showToast(c.fullName)}>
+                  进入城市
+                  <Icon.ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className={`city-toast ${toast ? 'show' : ''}`}>{toast}</div>
+    </section>
+  );
+}
+
+// ===== Highlights / Team Dynamics =====
+function Highlights() {
+  const slides = [
+    { title: '滚木化许久的永谐市已于近期推动城市化进程' },
+    { title: '振邦团队核心成员于近期在永谐举办集体放片活动 令人忍俊不禁' },
+    { title: '滨州市荣获"振邦大陆最城市化地区"称号' },
+  ];
+
+  const dynamics = [
+    { title: '振邦团队四大娱乐：鹿关、读博、踩背、搬史', date: '2026.08.30' },
+    { title: '庭州市已接入振邦电网', date: '2026.08.15' },
+    { title: '振邦团队核心成员于近期在永谐举办集体放片活动 令人忍俊不禁', date: '2026.08.01' },
+    { title: '滨州市荣获"振邦大陆最城市化地区"称号', date: '2026.07.30' },
+    { title: '滚木化许久的永谐市已于近期推动城市化进程', date: '2026.07.15' },
+  ];
+
+  const [current, setCurrent] = React.useState(0);
+  const [isPaused, setIsPaused] = React.useState(false);
+  const [toast, setToast] = React.useState(false);
+  const touchStartX = React.useRef(0);
+  const touchDeltaX = React.useRef(0);
+  const [dragOffset, setDragOffset] = React.useState(0);
+  const [isDragging, setIsDragging] = React.useState(false);
+
+  // 自动轮播
+  React.useEffect(() => {
+    if (isPaused || isDragging) return;
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [isPaused, isDragging, slides.length]);
+
+  const goTo = (i) => setCurrent((i + slides.length) % slides.length);
+
+  const showToast = () => {
+    setToast(true);
+    setTimeout(() => setToast(false), 1800);
+  };
+
+  // 触摸 / 拖拽事件
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches ? e.touches[0].clientX : e.clientX;
+    touchDeltaX.current = 0;
+    setIsDragging(true);
+  };
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    touchDeltaX.current = x - touchStartX.current;
+    setDragOffset(touchDeltaX.current);
+  };
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    const threshold = 60;
+    if (touchDeltaX.current > threshold) {
+      goTo(current - 1);
+    } else if (touchDeltaX.current < -threshold) {
+      goTo(current + 1);
+    }
+    setDragOffset(0);
+    setIsDragging(false);
+    touchDeltaX.current = 0;
+  };
+
+  const carouselStyle = {
+    transform: `translateX(calc(${-current * 100}% + ${dragOffset}px))`,
+    transition: isDragging ? 'none' : 'transform 0.5s var(--ease-out)',
+  };
+
+  return (
+    <section className="section highlights" id="team-dynamics">
+      <div className="container">
+        <div className="section-header reveal">
+          <span className="section-tag">TEAM DYNAMICS</span>
+          <h2 className="section-title">团队动态</h2>
+          <p className="section-desc">
+            走近振邦团队，了解我们的最新动态、成长故事与每一个里程碑
+          </p>
+        </div>
+
+        <div className="dynamics-layout reveal">
+          {/* 左侧：轮播 */}
+          <div
+            className="carousel"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => { setIsPaused(false); handleTouchEnd(); }}
+            onMouseDown={handleTouchStart}
+            onMouseMove={handleTouchMove}
+            onMouseUp={handleTouchEnd}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div className="carousel-track" style={carouselStyle}>
+              {slides.map((s, i) => (
+                <div className="carousel-slide" key={i}>
+                  <div className="carousel-img">
+                    <img src="assets/logo.png" alt={s.title} />
+                  </div>
+                  <div className="carousel-caption">
+                    <h3>{s.title}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="carousel-arrow prev" onClick={() => goTo(current - 1)} aria-label="上一张">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <button className="carousel-arrow next" onClick={() => goTo(current + 1)} aria-label="下一张">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+            <div className="carousel-dots">
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  className={`carousel-dot ${i === current ? 'active' : ''}`}
+                  onClick={() => goTo(i)}
+                  aria-label={`第 ${i + 1} 条`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* 右侧：动态列表 */}
+          <div className="dynamics-list">
+            <ul>
+              {dynamics.map((d, i) => (
+                <li key={i} onClick={showToast}>
+                  <div className="dyn-dot"></div>
+                  <div className="dyn-content">
+                    <div className="dyn-title">{d.title}</div>
+                    <div className="dyn-date">{d.date}</div>
+                  </div>
+                  <Icon.ArrowRight size={16} />
+                </li>
+              ))}
+            </ul>
+            <button className="dyn-more-btn" onClick={showToast}>
+              查看更多
+              <Icon.ArrowRight size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* Toast */}
+        <div className={`dyn-toast ${toast ? 'show' : ''}`}>敬请期待</div>
+      </div>
+    </section>
+  );
+}
+
+// ===== CTA =====
+function CTA({ onFollowClick }) {
+  const handleFollow = () => {
+    if (onFollowClick) onFollowClick();
+  };
+
+  return (
+    <section className="cta-section">
+      <div className="container">
+        <div className="cta-card reveal">
+          <div className="cta-content">
+            <div className="cta-slogan">仁峻<span className="red">步进</span><span className="sep">・</span>干得<span className="red">振邦</span></div>
+            <h2>关注振邦团队官方频道<br />不错过每一期精彩</h2>
+            <p>
+              关注振邦团队官方频道，第一时间了解我们的最新动态、成长故事与每一个里程碑。振邦团队，为振邦而生。
+            </p>
+            <div className="cta-actions">
+              <button className="btn btn-primary" onClick={handleFollow}>
+                立即关注
+                <Icon.ArrowRight size={18} />
+              </button>
+            </div>
+          </div>
+          <div className="cta-visual">
+            <img src="assets/logo.png" alt="振邦团队" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===== Footer =====
+function Footer({ onFollowClick }) {
+  const [toast, setToast] = React.useState('');
+
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 1800);
+  };
+
+  const handleAnchor = (e, id) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleBilibili = (e) => {
+    e.preventDefault();
+    if (onFollowClick) onFollowClick();
+  };
+
+  const handleToast = (e, msg) => {
+    e.preventDefault();
+    showToast(msg);
+  };
+
+  return (
+    <footer className="footer">
+      <div className="container">
+        <div className="footer-top">
+          {/* 品牌区 */}
+          <div className="footer-brand">
+            <div className="footer-brand-head">
+              <div className="footer-logo">
+                <img src="assets/logo.png" alt="振邦团队Logo" />
+              </div>
+              <div className="footer-brand-text">
+                <h3>振邦团队</h3>
+                <span>Good Team</span>
+              </div>
+            </div>
+            <div className="footer-brand-slogan">
+              仁峻<span className="red">步进</span><span className="sep">・</span>干得<span className="red">振邦</span>
+            </div>
+            <p>
+              振邦团队官方内容阵地，分享最新动态、成长故事与每一个里程碑。秉持仁峻品格、振邦精神。
+            </p>
+          </div>
+
+          {/* 内容栏目 */}
+          <div className="footer-col">
+            <h4>内容栏目</h4>
+            <ul>
+              <li><a href="#about" onClick={(e) => handleAnchor(e, 'about')}>关于我们</a></li>
+              <li><a href="#about" onClick={(e) => handleAnchor(e, 'about')}>核心成员</a></li>
+              <li><a href="#team-dynamics" onClick={(e) => handleAnchor(e, 'team-dynamics')}>团队动态</a></li>
+              <li><a href="#channels" onClick={(e) => handleAnchor(e, 'channels')}>探索城市</a></li>
+            </ul>
+          </div>
+
+          {/* 关于我们 */}
+          <div className="footer-col">
+            <h4>关于我们</h4>
+            <ul>
+              <li><a onClick={(e) => handleToast(e, '敬请期待')}>团队介绍</a></li>
+              <li><a onClick={(e) => handleToast(e, '敬请期待')}>核心成员</a></li>
+              <li><a onClick={(e) => handleToast(e, '敬请期待')}>加入我们</a></li>
+              <li><a onClick={(e) => handleToast(e, '敬请期待')}>商务合作</a></li>
+            </ul>
+          </div>
+
+          {/* 联系方式 */}
+          <div className="footer-col">
+            <h4>联系方式</h4>
+            <ul className="footer-contact">
+              <li>
+                <span className="contact-label">邮箱</span>
+                <a onClick={(e) => handleToast(e, '114514@good.team')}>114514@good.team</a>
+              </li>
+              <li>
+                <span className="contact-label">Bilibili</span>
+                <a onClick={handleBilibili}>振邦团队官方频道</a>
+              </li>
+              <li>
+                <span className="contact-label">地址</span>
+                <span className="contact-value">永谐市中心城区</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <span>© 2026 振邦团队 Good Team. All rights reserved.</span>
+          <div className="footer-bottom-links">
+            <a onClick={(e) => handleToast(e, '敬请期待')}>隐私政策</a>
+            <span className="footer-bottom-sep">|</span>
+            <a onClick={(e) => handleToast(e, '敬请期待')}>使用条款</a>
+            <span className="footer-bottom-sep">|</span>
+            <a onClick={(e) => handleToast(e, '敬请期待')}>版权声明</a>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Toast */}
+      <div className={`footer-toast ${toast ? 'show' : ''}`}>{toast}</div>
+    </footer>
+  );
+}
+
+// ===== Back to Top =====
+function BackToTop() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 400);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const scrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <button className={`back-top ${visible ? 'visible' : ''}`} onClick={scrollTop}>
+      <Icon.ChevronUp size={20} />
+    </button>
+  );
+}
+
+// ===== Scroll Reveal =====
+function useScrollReveal() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    const els = document.querySelectorAll('.reveal');
+    els.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+}
+
+// ===== Follow Modal =====
+function FollowModal({ open, onClose }) {
+  const handleConfirm = () => {
+    onClose();
+    window.open('https://space.bilibili.com/1193740713?spm_id_from=333.1387.follow.user_card.click', '_blank', 'noopener');
+  };
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
+  return (
+    <div className={`modal-overlay ${open ? 'open' : ''}`} onClick={handleOverlayClick}>
+      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+        <h3 className="modal-title">提示</h3>
+        <p className="modal-desc">即将前往 Bilibili @振邦团队官方频道</p>
+        <div className="modal-actions">
+          <button className="modal-btn" onClick={onClose}>取消</button>
+          <button className="modal-btn primary" onClick={handleConfirm}>确认</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== App =====
+function App() {
+  const [followModalOpen, setFollowModalOpen] = React.useState(false);
+
+  useScrollReveal();
+
+  return (
+    <>
+      <Nav onFollowClick={() => setFollowModalOpen(true)} />
+      <FollowModal open={followModalOpen} onClose={() => setFollowModalOpen(false)} />
+      <main>
+        <Hero />
+        <About />
+        <Highlights />
+        <Channels />
+        <CTA onFollowClick={() => setFollowModalOpen(true)} />
+      </main>
+      <Footer onFollowClick={() => setFollowModalOpen(true)} />
+      <BackToTop />
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
